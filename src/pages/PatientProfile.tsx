@@ -184,14 +184,35 @@ const PatientProfile: React.FC = () => {
   }
 
   // Radar Data Preparation
-  const latestConsultation = consultations[0]; // Already ordered by descending date
-  const radarData = latestConsultation ? [
-    { subject: 'Proteína', A: latestConsultation.pontuacao_proteina || 0, fullMark: 100 },
-    { subject: 'Carboidrato', A: latestConsultation.pontuacao_carboidrato || 0, fullMark: 100 },
-    { subject: 'Gordura', A: latestConsultation.pontuacao_gordura || 0, fullMark: 100 },
-    { subject: 'Hidratação', A: latestConsultation.pontuacao_hidratacao || 0, fullMark: 100 },
-    { subject: 'Fibras', A: latestConsultation.pontuacao_fibras || 0, fullMark: 100 },
-    { subject: 'Consistência', A: latestConsultation.pontuacao_consistencia || 0, fullMark: 100 },
+  ] : [];
+
+  // Target Data based on Objectives
+  const getTargetScore = (subject: string) => {
+    const goals = patient?.objetivos || [];
+    const lowerGoals = goals.map(g => g.toLowerCase());
+    
+    const isHypertrophy = lowerGoals.some(g => g.includes('hipertrofia') || g.includes('massa'));
+    const isWeightLoss = lowerGoals.some(g => g.includes('emagrecimento') || g.includes('peso') || g.includes('gordura'));
+    const isPerformance = lowerGoals.some(g => g.includes('performance') || g.includes('esporte') || g.includes('atleta'));
+
+    switch(subject) {
+      case 'Proteína': return isHypertrophy || isPerformance ? 90 : 70;
+      case 'Carboidrato': return isPerformance ? 90 : isWeightLoss ? 50 : 70;
+      case 'Gordura': return isWeightLoss ? 50 : 70;
+      case 'Hidratação': return isPerformance ? 100 : 90;
+      case 'Fibras': return isWeightLoss ? 95 : 80;
+      case 'Consistência': return 100;
+      default: return 80;
+    }
+  };
+
+  const combinedRadarData = latestConsultation ? [
+    { subject: 'Proteína', Real: latestConsultation.pontuacao_proteina || 0, Ideal: getTargetScore('Proteína'), fullMark: 100 },
+    { subject: 'Carboidrato', Real: latestConsultation.pontuacao_carboidrato || 0, Ideal: getTargetScore('Carboidrato'), fullMark: 100 },
+    { subject: 'Gordura', Real: latestConsultation.pontuacao_gordura || 0, Ideal: getTargetScore('Gordura'), fullMark: 100 },
+    { subject: 'Hidratação', Real: latestConsultation.pontuacao_hidratacao || 0, Ideal: getTargetScore('Hidratação'), fullMark: 100 },
+    { subject: 'Fibras', Real: latestConsultation.pontuacao_fibras || 0, Ideal: getTargetScore('Fibras'), fullMark: 100 },
+    { subject: 'Consistência', Real: latestConsultation.pontuacao_consistencia || 0, Ideal: getTargetScore('Consistência'), fullMark: 100 },
   ] : [];
 
   return (
@@ -516,41 +537,81 @@ const PatientProfile: React.FC = () => {
                   )}
                 </div>
 
-                {radarData.length > 0 ? (
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                        <PolarGrid stroke="#e2e8f0" />
-                        <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 12, fontWeight: 500 }} />
-                        <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                        <Radar
-                          name="Performance"
-                          dataKey="A"
-                          stroke="var(--primary-color)"
-                          strokeWidth={3}
-                          fill="var(--primary-color)"
-                          fillOpacity={0.2}
-                        />
-                        <Tooltip 
-                          contentStyle={{ 
-                            borderRadius: '12px', 
-                            border: 'none', 
-                            boxShadow: 'var(--shadow-lg)',
-                            padding: '10px 15px'
-                          }}
-                        />
-                      </RadarChart>
-                    </ResponsiveContainer>
+                {combinedRadarData.length > 0 ? (
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: '2rem' }}>
+                    <div style={{ flex: 1, minWidth: '300px' }}>
+                      <ResponsiveContainer width="100%" height={350}>
+                        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={combinedRadarData}>
+                          <PolarGrid stroke="#e2e8f0" />
+                          <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }} />
+                          <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+                          <Radar
+                            name="Ideal (Meta)"
+                            dataKey="Ideal"
+                            stroke="#94a3b8"
+                            strokeWidth={1}
+                            fill="#94a3b8"
+                            fillOpacity={0.1}
+                            strokeDasharray="4 4"
+                          />
+                          <Radar
+                            name="Atual (Real)"
+                            dataKey="Real"
+                            stroke="var(--primary-color)"
+                            strokeWidth={3}
+                            fill="var(--primary-color)"
+                            fillOpacity={0.3}
+                          />
+                          <Tooltip 
+                            contentStyle={{ 
+                              borderRadius: '12px', 
+                              border: 'none', 
+                              boxShadow: 'var(--shadow-lg)',
+                              padding: '10px 15px'
+                            }}
+                          />
+                        </RadarChart>
+                      </ResponsiveContainer>
+                    </div>
                     
-                    <div style={{ padding: '0 1rem', display: 'grid', gap: '0.75rem', minWidth: '180px' }}>
-                      {radarData.map((item, idx) => (
-                        <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                          <span style={{ fontSize: '0.875rem', color: '#64748b' }}>{item.subject}</span>
-                          <span style={{ fontSize: '0.875rem', fontWeight: 700, color: item.A > 70 ? '#10b981' : item.A > 40 ? '#f59e0b' : '#ef4444' }}>
-                            {item.A}%
-                          </span>
+                    <div style={{ padding: '1.5rem', background: '#fff', borderRadius: '16px', border: '1px solid #f1f5f9', minWidth: '280px', flex: '0 1 auto' }}>
+                      <p style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1e293b', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <Info size={16} color="var(--primary-color)" />
+                        Legenda de Performance
+                      </p>
+                      <div style={{ display: 'grid', gap: '1rem' }}>
+                        {combinedRadarData.map((item, idx) => {
+                          const diff = item.Real - item.Ideal;
+                          const isGood = diff >= -10;
+                          return (
+                            <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#475569' }}>{item.subject}</span>
+                                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                  <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{item.Ideal}%</span>
+                                  <span style={{ fontSize: '0.875rem', fontWeight: 800, color: isGood ? '#10b981' : '#f59e0b' }}>
+                                    {item.Real}%
+                                  </span>
+                                </div>
+                              </div>
+                              <div style={{ width: '100%', height: '4px', background: '#f1f5f9', borderRadius: '2px', overflow: 'hidden' }}>
+                                <div style={{ width: `${item.Real}%`, height: '100%', background: isGood ? '#10b981' : '#f59e0b', borderRadius: '2px' }} />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      
+                      <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9', display: 'flex', gap: '1rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                          <div style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'var(--primary-color)', opacity: 0.5 }} />
+                          <span style={{ fontSize: '0.7rem', color: '#64748b' }}>Real</span>
                         </div>
-                      ))}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                          <div style={{ width: '10px', height: '10px', borderRadius: '2px', border: '1px dashed #94a3b8' }} />
+                          <span style={{ fontSize: '0.7rem', color: '#64748b' }}>Meta</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ) : (
