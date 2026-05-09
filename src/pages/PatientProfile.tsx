@@ -542,35 +542,43 @@ const PatientProfile: React.FC = () => {
                       <div style={{ height: '250px', width: '100%' }}>
                         <ResponsiveContainer width="100%" height="100%">
                           <RadarChart cx="50%" cy="50%" outerRadius="75%" data={combinedRadarData}>
+                            <defs>
+                              <linearGradient id="radarGradient" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stopColor="#10b981" stopOpacity={0.6}/>
+                                <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.6}/>
+                              </linearGradient>
+                            </defs>
                             <PolarGrid stroke="var(--chart-grid)" />
-                            <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--chart-text)', fontSize: 10, fontWeight: 600 }} />
+                            <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--chart-text)', fontSize: 10, fontWeight: 700 }} />
                             <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
                             <Radar
                               name="Meta"
                               dataKey="Ideal"
-                              stroke="var(--text-muted)"
-                              strokeWidth={1}
-                              fill="var(--text-muted)"
+                              stroke="#f59e0b"
+                              strokeWidth={2}
+                              fill="#f59e0b"
                               fillOpacity={0.05}
                               strokeDasharray="4 4"
                             />
                             <Radar
                               name="Real"
                               dataKey="Real"
-                              stroke="var(--primary-color)"
-                              strokeWidth={2}
-                              fill="var(--primary-color)"
-                              fillOpacity={0.3}
+                              stroke="url(#radarGradient)"
+                              strokeWidth={3}
+                              fill="url(#radarGradient)"
+                              fillOpacity={0.4}
+                              dot={{ r: 4, fill: '#fff', strokeWidth: 2, stroke: '#3b82f6' }}
                             />
                             <Tooltip 
                               contentStyle={{ 
-                                borderRadius: '12px', 
+                                borderRadius: '16px', 
                                 border: '1px solid var(--border-color)', 
                                 boxShadow: 'var(--shadow-lg)',
-                                padding: '8px 12px',
-                                fontSize: '12px',
+                                padding: '12px 16px',
+                                fontSize: '13px',
                                 backgroundColor: 'var(--card-bg)',
-                                color: 'var(--text-main)'
+                                color: 'var(--text-main)',
+                                backdropFilter: 'blur(8px)'
                               }}
                             />
                           </RadarChart>
@@ -578,12 +586,23 @@ const PatientProfile: React.FC = () => {
                       </div>
                       
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', padding: '0.5rem' }}>
-                        {combinedRadarData.slice(0, 4).map((item, idx) => (
-                          <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem' }}>
-                            <span style={{ color: 'var(--text-secondary)' }}>{item.subject}</span>
-                            <span style={{ fontWeight: 700, color: item.Real >= item.Ideal - 10 ? '#10b981' : '#f59e0b' }}>{item.Real}%</span>
-                          </div>
-                        ))}
+                        {combinedRadarData.slice(0, 6).map((item, idx) => {
+                          const colors = ['#3b82f6', '#f59e0b', '#ef4444', '#06b6d4', '#10b981', '#8b5cf6'];
+                          return (
+                            <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', padding: '0.25rem 0' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: colors[idx % colors.length] }} />
+                                <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>{item.subject}</span>
+                              </div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                <span style={{ color: 'var(--text-muted)', fontSize: '0.7rem' }}>{item.Ideal}%</span>
+                                <span style={{ fontWeight: 800, color: item.Real >= item.Ideal - 10 ? '#10b981' : item.Real < 40 ? '#ef4444' : '#f59e0b' }}>
+                                  {item.Real}%
+                                </span>
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   ) : (
