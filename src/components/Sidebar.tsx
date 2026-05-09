@@ -11,21 +11,8 @@ const Sidebar: React.FC = () => {
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <img 
-            src="/src/assets/logo-milani.png" 
-            alt="MilaniNutri" 
-            style={{ width: '40px', height: '40px', objectFit: 'contain' }}
-            onError={(e) => {
-              // Fallback to text if image not found
-              (e.target as HTMLImageElement).style.display = 'none';
-              const textLogo = (e.target as HTMLImageElement).nextElementSibling as HTMLElement;
-              if (textLogo) textLogo.style.display = 'flex';
-            }}
-          />
-          <div className="logo-text">
-            MilaniNutri <span style={{ display: 'none' }}>Gestão</span>
-          </div>
+        <div className="logo-text">
+          MilaniNutri <span>Gestão</span>
         </div>
       </div>
 

@@ -118,17 +118,9 @@ const Dashboard: React.FC = () => {
       <Sidebar />
       
       <main className="main-content">
-        <header style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem' }}>
-          <img 
-            src="/src/assets/logo-milani.png" 
-            alt="Logo" 
-            style={{ width: '60px', height: '60px', objectFit: 'contain' }}
-            onError={(e) => (e.target as HTMLImageElement).style.display = 'none'}
-          />
-          <div>
-            <h1 style={{ fontSize: '1.875rem', fontWeight: 700, color: 'var(--text-main)' }}>Dashboard</h1>
-            <p style={{ color: 'var(--text-secondary)', marginTop: '0.25rem' }}>Bem-vinda de volta ao MilaniNutri Gestão.</p>
-          </div>
+        <header>
+          <h1 style={{ fontSize: '1.875rem', fontWeight: 700, color: 'var(--text-main)' }}>Dashboard</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '0.25rem' }}>Bem-vinda de volta ao MilaniNutri Gestão.</p>
         </header>
 
         <div className="dashboard-grid">
