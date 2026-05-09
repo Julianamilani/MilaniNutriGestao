@@ -119,8 +119,8 @@ const Dashboard: React.FC = () => {
       
       <main className="main-content">
         <header>
-          <h1 style={{ fontSize: '1.875rem', fontWeight: 700, color: '#111827' }}>Dashboard</h1>
-          <p style={{ color: '#6b7280', marginTop: '0.25rem' }}>Bem-vinda de volta ao MilaniNutri Gestão.</p>
+          <h1 style={{ fontSize: '1.875rem', fontWeight: 700, color: 'var(--text-main)' }}>Dashboard</h1>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '0.25rem' }}>Bem-vinda de volta ao MilaniNutri Gestão.</p>
         </header>
 
         <div className="dashboard-grid">
@@ -166,7 +166,7 @@ const Dashboard: React.FC = () => {
                       <Link to={`/pacientes/${patient.id}`} className="patient-link">
                         {patient.nome}
                       </Link>
-                      <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>Sem retorno</span>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Sem retorno</span>
                     </li>
                   ))}
                 </ul>

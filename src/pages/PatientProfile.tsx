@@ -223,14 +223,14 @@ const PatientProfile: React.FC = () => {
         {/* Header */}
         <header className="page-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-            <button onClick={() => navigate('/pacientes')} className="modal-close" style={{ background: '#fff', border: '1px solid #e5e7eb' }}>
+            <button onClick={() => navigate('/pacientes')} className="modal-close" style={{ background: 'var(--card-bg)', border: '1px solid var(--border-color)' }}>
               <ArrowLeft size={20} />
             </button>
             <div>
-              <h1 style={{ fontSize: '2rem', fontWeight: 700, color: '#111827' }}>{patient?.nome}</h1>
+              <h1 style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--text-main)' }}>{patient?.nome}</h1>
               <div style={{ display: 'flex', gap: '1rem', marginTop: '0.25rem' }}>
                 <span className="badge badge-primary">{patient?.sexo}</span>
-                <span style={{ color: '#6b7280', fontSize: '0.875rem' }}>{patient?.email || 'Sem e-mail'}</span>
+                <span style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{patient?.email || 'Sem e-mail'}</span>
               </div>
             </div>
           </div>

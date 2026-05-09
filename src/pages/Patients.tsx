@@ -82,8 +82,8 @@ const Patients: React.FC = () => {
       <main className="main-content">
         <header className="page-header">
           <div>
-            <h1 style={{ fontSize: '1.875rem', fontWeight: 700, color: '#111827' }}>Pacientes</h1>
-            <p style={{ color: '#6b7280', marginTop: '0.25rem' }}>Gerencie sua lista de pacientes e acompanhamentos.</p>
+            <h1 style={{ fontSize: '1.875rem', fontWeight: 700, color: 'var(--text-main)' }}>Pacientes</h1>
+            <p style={{ color: 'var(--text-secondary)', marginTop: '0.25rem' }}>Gerencie sua lista de pacientes e acompanhamentos.</p>
           </div>
           <button 
             className="btn-primary" 
@@ -125,7 +125,7 @@ const Patients: React.FC = () => {
                     <td>{patient.objetivo_texto}</td>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <Calendar size={16} color="#9ca3af" />
+                        <Calendar size={16} color="var(--text-muted)" />
                         {patient.last_consultation}
                       </div>
                     </td>

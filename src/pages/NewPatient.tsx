@@ -154,8 +154,8 @@ const NewPatient: React.FC = () => {
               <ArrowLeft size={20} />
             </button>
             <div>
-              <h1 style={{ fontSize: '1.875rem', fontWeight: 700, color: '#111827' }}>Novo Paciente</h1>
-              <p style={{ color: '#6b7280', marginTop: '0.25rem' }}>Cadastre um novo acompanhamento nutricional.</p>
+              <h1 style={{ fontSize: '1.875rem', fontWeight: 700, color: 'var(--text-main)' }}>Novo Paciente</h1>
+              <p style={{ color: 'var(--text-secondary)', marginTop: '0.25rem' }}>Cadastre um novo acompanhamento nutricional.</p>
             </div>
           </div>
         </header>
