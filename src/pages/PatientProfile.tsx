@@ -184,7 +184,8 @@ const PatientProfile: React.FC = () => {
   }
 
   // Radar Data Preparation
-  ] : [];
+  const latestConsultation = consultations[0]; // Already ordered by descending date
+
 
   // Target Data based on Objectives
   const getTargetScore = (subject: string) => {
