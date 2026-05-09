@@ -483,27 +483,29 @@ const PatientProfile: React.FC = () => {
                             <stop offset="95%" stopColor="var(--primary-color)" stopOpacity={0}/>
                           </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--chart-grid)" />
                         <XAxis 
                           dataKey="date" 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: '#9ca3af', fontSize: 12 }} 
+                          tick={{ fill: 'var(--chart-text)', fontSize: 12 }} 
                           dy={10}
                         />
                         <YAxis 
                           axisLine={false} 
                           tickLine={false} 
-                          tick={{ fill: '#9ca3af', fontSize: 12 }} 
+                          tick={{ fill: 'var(--chart-text)', fontSize: 12 }} 
                           dx={-10}
                           domain={['dataMin - 5', 'dataMax + 5']}
                         />
                         <Tooltip 
                           contentStyle={{ 
                             borderRadius: '12px', 
-                            border: 'none', 
+                            border: '1px solid var(--border-color)', 
                             boxShadow: 'var(--shadow-lg)',
-                            padding: '10px 15px'
+                            padding: '10px 15px',
+                            backgroundColor: 'var(--card-bg)',
+                            color: 'var(--text-main)'
                           }}
                           itemStyle={{ color: 'var(--primary-color)', fontWeight: 700 }}
                         />
@@ -527,11 +529,11 @@ const PatientProfile: React.FC = () => {
                 </div>
 
                 {/* Radar Chart */}
-                <div className="chart-container" style={{ height: '100%', background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)' }}>
+                <div className="chart-container" style={{ height: '100%', background: 'var(--chart-bg-gradient)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <Apple size={18} color="var(--primary-color)" />
-                      <span style={{ fontWeight: 600, color: '#374151' }}>Performance Nutricional</span>
+                      <span style={{ fontWeight: 600, color: 'var(--text-main)' }}>Performance Nutricional</span>
                     </div>
                   </div>
 
@@ -540,15 +542,15 @@ const PatientProfile: React.FC = () => {
                       <div style={{ height: '250px', width: '100%' }}>
                         <ResponsiveContainer width="100%" height="100%">
                           <RadarChart cx="50%" cy="50%" outerRadius="75%" data={combinedRadarData}>
-                            <PolarGrid stroke="#e2e8f0" />
-                            <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 600 }} />
+                            <PolarGrid stroke="var(--chart-grid)" />
+                            <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--chart-text)', fontSize: 10, fontWeight: 600 }} />
                             <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
                             <Radar
                               name="Meta"
                               dataKey="Ideal"
-                              stroke="#94a3b8"
+                              stroke="var(--text-muted)"
                               strokeWidth={1}
-                              fill="#94a3b8"
+                              fill="var(--text-muted)"
                               fillOpacity={0.05}
                               strokeDasharray="4 4"
                             />
@@ -558,15 +560,17 @@ const PatientProfile: React.FC = () => {
                               stroke="var(--primary-color)"
                               strokeWidth={2}
                               fill="var(--primary-color)"
-                              fillOpacity={0.2}
+                              fillOpacity={0.3}
                             />
                             <Tooltip 
                               contentStyle={{ 
                                 borderRadius: '12px', 
-                                border: 'none', 
+                                border: '1px solid var(--border-color)', 
                                 boxShadow: 'var(--shadow-lg)',
                                 padding: '8px 12px',
-                                fontSize: '12px'
+                                fontSize: '12px',
+                                backgroundColor: 'var(--card-bg)',
+                                color: 'var(--text-main)'
                               }}
                             />
                           </RadarChart>
@@ -576,7 +580,7 @@ const PatientProfile: React.FC = () => {
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', padding: '0.5rem' }}>
                         {combinedRadarData.slice(0, 4).map((item, idx) => (
                           <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem' }}>
-                            <span style={{ color: '#64748b' }}>{item.subject}</span>
+                            <span style={{ color: 'var(--text-secondary)' }}>{item.subject}</span>
                             <span style={{ fontWeight: 700, color: item.Real >= item.Ideal - 10 ? '#10b981' : '#f59e0b' }}>{item.Real}%</span>
                           </div>
                         ))}
