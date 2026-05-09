@@ -465,163 +465,132 @@ const PatientProfile: React.FC = () => {
             </div>
             
             <div className="profile-section-content">
-              {/* Chart */}
-              <div className="chart-container">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
-                  <TrendingUp size={18} color="var(--primary-color)" />
-                  <span style={{ fontWeight: 600, color: '#374151' }}>Evolução do Peso</span>
-                </div>
-                
-                {weightData.length > 0 ? (
-                  <ResponsiveContainer width="100%" height={220}>
-                    <AreaChart data={weightData}>
-                      <defs>
-                        <linearGradient id="colorPeso" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="var(--primary-color)" stopOpacity={0.1}/>
-                          <stop offset="95%" stopColor="var(--primary-color)" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-                      <XAxis 
-                        dataKey="date" 
-                        axisLine={false} 
-                        tickLine={false} 
-                        tick={{ fill: '#9ca3af', fontSize: 12 }} 
-                        dy={10}
-                      />
-                      <YAxis 
-                        axisLine={false} 
-                        tickLine={false} 
-                        tick={{ fill: '#9ca3af', fontSize: 12 }} 
-                        dx={-10}
-                        domain={['dataMin - 5', 'dataMax + 5']}
-                      />
-                      <Tooltip 
-                        contentStyle={{ 
-                          borderRadius: '12px', 
-                          border: 'none', 
-                          boxShadow: 'var(--shadow-lg)',
-                          padding: '10px 15px'
-                        }}
-                        itemStyle={{ color: 'var(--primary-color)', fontWeight: 700 }}
-                      />
-                      <Area 
-                        type="monotone" 
-                        dataKey="peso" 
-                        stroke="var(--primary-color)" 
-                        strokeWidth={3} 
-                        fillOpacity={1} 
-                        fill="url(#colorPeso)" 
-                        activeDot={{ r: 6, strokeWidth: 0, fill: 'var(--primary-color)' }}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                ) : (
-                  <div className="chart-empty">
-                    <Activity size={48} strokeWidth={1} />
-                    <p>Nenhuma consulta registrada ainda</p>
+              {/* Charts Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '2rem', marginBottom: '2rem' }}>
+                {/* Weight Evolution Chart */}
+                <div className="chart-container" style={{ height: '100%' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
+                    <TrendingUp size={18} color="var(--primary-color)" />
+                    <span style={{ fontWeight: 600, color: '#374151' }}>Evolução do Peso</span>
                   </div>
-                )}
-              </div>
-
-              {/* Radar Chart */}
-              <div className="chart-container" style={{ marginTop: '2rem', background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <Apple size={18} color="var(--primary-color)" />
-                    <span style={{ fontWeight: 600, color: '#374151' }}>Performance Nutricional (Objetivo)</span>
-                  </div>
-                  {latestConsultation && (
-                    <span className="badge badge-primary" style={{ fontSize: '0.75rem' }}>
-                      Última análise: {new Date(latestConsultation.data_consulta).toLocaleDateString('pt-BR')}
-                    </span>
+                  
+                  {weightData.length > 0 ? (
+                    <ResponsiveContainer width="100%" height={250}>
+                      <AreaChart data={weightData}>
+                        <defs>
+                          <linearGradient id="colorPeso" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="var(--primary-color)" stopOpacity={0.1}/>
+                            <stop offset="95%" stopColor="var(--primary-color)" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                        <XAxis 
+                          dataKey="date" 
+                          axisLine={false} 
+                          tickLine={false} 
+                          tick={{ fill: '#9ca3af', fontSize: 12 }} 
+                          dy={10}
+                        />
+                        <YAxis 
+                          axisLine={false} 
+                          tickLine={false} 
+                          tick={{ fill: '#9ca3af', fontSize: 12 }} 
+                          dx={-10}
+                          domain={['dataMin - 5', 'dataMax + 5']}
+                        />
+                        <Tooltip 
+                          contentStyle={{ 
+                            borderRadius: '12px', 
+                            border: 'none', 
+                            boxShadow: 'var(--shadow-lg)',
+                            padding: '10px 15px'
+                          }}
+                          itemStyle={{ color: 'var(--primary-color)', fontWeight: 700 }}
+                        />
+                        <Area 
+                          type="monotone" 
+                          dataKey="peso" 
+                          stroke="var(--primary-color)" 
+                          strokeWidth={3} 
+                          fillOpacity={1} 
+                          fill="url(#colorPeso)" 
+                          activeDot={{ r: 6, strokeWidth: 0, fill: 'var(--primary-color)' }}
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="chart-empty">
+                      <Activity size={48} strokeWidth={1} />
+                      <p>Nenhuma consulta registrada ainda</p>
+                    </div>
                   )}
                 </div>
 
-                {combinedRadarData.length > 0 ? (
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: '2rem' }}>
-                    <div style={{ flex: 1, minWidth: '300px' }}>
-                      <ResponsiveContainer width="100%" height={350}>
-                        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={combinedRadarData}>
-                          <PolarGrid stroke="#e2e8f0" />
-                          <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }} />
-                          <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                          <Radar
-                            name="Ideal (Meta)"
-                            dataKey="Ideal"
-                            stroke="#94a3b8"
-                            strokeWidth={1}
-                            fill="#94a3b8"
-                            fillOpacity={0.1}
-                            strokeDasharray="4 4"
-                          />
-                          <Radar
-                            name="Atual (Real)"
-                            dataKey="Real"
-                            stroke="var(--primary-color)"
-                            strokeWidth={3}
-                            fill="var(--primary-color)"
-                            fillOpacity={0.3}
-                          />
-                          <Tooltip 
-                            contentStyle={{ 
-                              borderRadius: '12px', 
-                              border: 'none', 
-                              boxShadow: 'var(--shadow-lg)',
-                              padding: '10px 15px'
-                            }}
-                          />
-                        </RadarChart>
-                      </ResponsiveContainer>
+                {/* Radar Chart */}
+                <div className="chart-container" style={{ height: '100%', background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <Apple size={18} color="var(--primary-color)" />
+                      <span style={{ fontWeight: 600, color: '#374151' }}>Performance Nutricional</span>
                     </div>
-                    
-                    <div style={{ padding: '1.5rem', background: '#fff', borderRadius: '16px', border: '1px solid #f1f5f9', minWidth: '280px', flex: '0 1 auto' }}>
-                      <p style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1e293b', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <Info size={16} color="var(--primary-color)" />
-                        Legenda de Performance
-                      </p>
-                      <div style={{ display: 'grid', gap: '1rem' }}>
-                        {combinedRadarData.map((item, idx) => {
-                          const diff = item.Real - item.Ideal;
-                          const isGood = diff >= -10;
-                          return (
-                            <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#475569' }}>{item.subject}</span>
-                                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                                  <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{item.Ideal}%</span>
-                                  <span style={{ fontSize: '0.875rem', fontWeight: 800, color: isGood ? '#10b981' : '#f59e0b' }}>
-                                    {item.Real}%
-                                  </span>
-                                </div>
-                              </div>
-                              <div style={{ width: '100%', height: '4px', background: '#f1f5f9', borderRadius: '2px', overflow: 'hidden' }}>
-                                <div style={{ width: `${item.Real}%`, height: '100%', background: isGood ? '#10b981' : '#f59e0b', borderRadius: '2px' }} />
-                              </div>
-                            </div>
-                          );
-                        })}
+                  </div>
+
+                  {combinedRadarData.length > 0 ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                      <div style={{ height: '250px', width: '100%' }}>
+                        <ResponsiveContainer width="100%" height="100%">
+                          <RadarChart cx="50%" cy="50%" outerRadius="75%" data={combinedRadarData}>
+                            <PolarGrid stroke="#e2e8f0" />
+                            <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 600 }} />
+                            <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+                            <Radar
+                              name="Meta"
+                              dataKey="Ideal"
+                              stroke="#94a3b8"
+                              strokeWidth={1}
+                              fill="#94a3b8"
+                              fillOpacity={0.05}
+                              strokeDasharray="4 4"
+                            />
+                            <Radar
+                              name="Real"
+                              dataKey="Real"
+                              stroke="var(--primary-color)"
+                              strokeWidth={2}
+                              fill="var(--primary-color)"
+                              fillOpacity={0.2}
+                            />
+                            <Tooltip 
+                              contentStyle={{ 
+                                borderRadius: '12px', 
+                                border: 'none', 
+                                boxShadow: 'var(--shadow-lg)',
+                                padding: '8px 12px',
+                                fontSize: '12px'
+                              }}
+                            />
+                          </RadarChart>
+                        </ResponsiveContainer>
                       </div>
                       
-                      <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #f1f5f9', display: 'flex', gap: '1rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                          <div style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'var(--primary-color)', opacity: 0.5 }} />
-                          <span style={{ fontSize: '0.7rem', color: '#64748b' }}>Real</span>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                          <div style={{ width: '10px', height: '10px', borderRadius: '2px', border: '1px dashed #94a3b8' }} />
-                          <span style={{ fontSize: '0.7rem', color: '#64748b' }}>Meta</span>
-                        </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', padding: '0.5rem' }}>
+                        {combinedRadarData.slice(0, 4).map((item, idx) => (
+                          <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem' }}>
+                            <span style={{ color: '#64748b' }}>{item.subject}</span>
+                            <span style={{ fontWeight: 700, color: item.Real >= item.Ideal - 10 ? '#10b981' : '#f59e0b' }}>{item.Real}%</span>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  </div>
-                ) : (
-                  <div className="chart-empty" style={{ height: '300px' }}>
-                    <Activity size={48} strokeWidth={1} />
-                    <p>Registre uma consulta para ver o gráfico de performance</p>
-                  </div>
-                )}
+                  ) : (
+                    <div className="chart-empty" style={{ height: '250px' }}>
+                      <Activity size={48} strokeWidth={1} />
+                      <p>Aguardando dados de consulta...</p>
+                    </div>
+                  )}
+                </div>
               </div>
+
 
               {/* Consultation List */}
               <div className="patients-table-card">
