@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
-  ArrowLeft, Plus, ChevronRight, Weight, Ruler, Activity, Apple, 
-  User, ClipboardList, Utensils, Save, CheckCircle, Calendar, 
-  History, TrendingUp, Info
+  ArrowLeft, Plus, ChevronRight, Activity, Apple, 
+  User, ClipboardList, Utensils, CheckCircle, Calendar, 
+  TrendingUp
 } from 'lucide-react';
 import { 
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, 
+  XAxis, YAxis, CartesianGrid, Tooltip, 
   ResponsiveContainer, AreaChart, Area,
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis
 } from 'recharts';

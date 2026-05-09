@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Save, Calendar, Weight, Ruler, Activity, MessageSquare } from 'lucide-react';
+import { X, Save, Calendar, Weight, Ruler, Activity } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface ConsultationModalProps {
