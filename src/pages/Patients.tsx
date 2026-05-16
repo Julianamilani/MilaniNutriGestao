@@ -4,6 +4,7 @@ import { Search, UserPlus, Calendar } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import Sidebar from '../components/Sidebar';
+import { formatDate, parseLocalDate } from '../lib/dateUtils';
 
 interface Patient {
   id: string;
@@ -51,7 +52,7 @@ const Patients: React.FC = () => {
           const consults = p.consultas || [];
           const lastConsult = consults.length > 0 
             ? consults.reduce((latest: string, current: any) => 
-                new Date(current.data_consulta) > new Date(latest) ? current.data_consulta : latest
+                parseLocalDate(current.data_consulta) > parseLocalDate(latest) ? current.data_consulta : latest
               , consults[0].data_consulta)
             : 'Nenhuma';
 
@@ -59,7 +60,7 @@ const Patients: React.FC = () => {
             id: p.id,
             nome: p.nome,
             objetivo_texto: p.objetivo_texto || 'Não informado',
-            last_consultation: lastConsult !== 'Nenhuma' ? new Date(lastConsult).toLocaleDateString('pt-BR') : 'Nenhuma'
+            last_consultation: lastConsult !== 'Nenhuma' ? formatDate(lastConsult) : 'Nenhuma'
           };
         });
         setPatients(processedPatients);

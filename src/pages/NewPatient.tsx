@@ -4,6 +4,7 @@ import { Save, ArrowLeft, CheckCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import Sidebar from '../components/Sidebar';
+import { parseLocalDate } from '../lib/dateUtils';
 
 type TabType = 'pessoal' | 'clinico' | 'habitos';
 
@@ -47,7 +48,7 @@ const NewPatient: React.FC = () => {
   // Calculations
   useEffect(() => {
     if (formData.data_nascimento) {
-      const birth = new Date(formData.data_nascimento);
+      const birth = parseLocalDate(formData.data_nascimento);
       const today = new Date();
       let ageValue = today.getFullYear() - birth.getFullYear();
       const m = today.getMonth() - birth.getMonth();

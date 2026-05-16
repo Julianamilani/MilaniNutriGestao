@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import Sidebar from '../components/Sidebar';
+import { parseLocalDate } from '../lib/dateUtils';
 
 interface Patient {
   id: string;
@@ -82,8 +83,8 @@ const Dashboard: React.FC = () => {
           if (patientConsults.length === 0) return true; // Never had a consultation? Could be dormant or new.
 
           // Find most recent activity
-          const latestConsultDate = new Date(Math.max(...patientConsults.map(c => new Date(c.data_consulta).getTime())));
-          const hasFutureReturn = patientConsults.some(c => c.proximo_retorno && new Date(c.proximo_retorno) > today);
+          const latestConsultDate = new Date(Math.max(...patientConsults.map(c => parseLocalDate(c.data_consulta).getTime())));
+          const hasFutureReturn = patientConsults.some(c => c.proximo_retorno && parseLocalDate(c.proximo_retorno) >= today);
 
           return latestConsultDate < thirtyDaysAgo && !hasFutureReturn;
         });
@@ -150,7 +151,7 @@ const Dashboard: React.FC = () => {
           <div className="list-card">
             <div className="stat-header">
               <span className="stat-title">Pacientes sem Retorno</span>
-              <div className="stat-icon" style={{ backgroundColor: '#fff7ed', color: '#f97316' }}>
+              <div className="stat-icon">
                 <AlertCircle size={20} />
               </div>
             </div>

@@ -12,7 +12,9 @@ import {
 } from 'recharts';
 import Sidebar from '../components/Sidebar';
 import ConsultationModal from '../components/ConsultationModal';
+import MealPlanModal from '../components/MealPlanModal';
 import { supabase } from '../lib/supabase';
+import { formatDate } from '../lib/dateUtils';
 
 type DataTab = 'pessoal' | 'clinico' | 'habitos';
 
@@ -78,6 +80,8 @@ const PatientProfile: React.FC = () => {
   // Tabs and Modals
   const [activeDataTab, setActiveDataTab] = useState<DataTab>('pessoal');
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<any>(null);
+  const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
 
   useEffect(() => {
     fetchProfileData();
@@ -174,7 +178,7 @@ const PatientProfile: React.FC = () => {
   const weightData = [...consultations]
     .reverse() // Chronological order
     .map(c => ({
-      date: new Date(c.data_consulta).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+      date: formatDate(c.data_consulta).substring(0, 5), // 'DD/MM'
       peso: c.peso
     }));
 
@@ -636,7 +640,7 @@ const PatientProfile: React.FC = () => {
                           <td style={{ fontWeight: 600 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                               <Calendar size={14} color="#9ca3af" />
-                              {new Date(c.data_consulta).toLocaleDateString('pt-BR')}
+                              {formatDate(c.data_consulta)}
                             </div>
                           </td>
                           <td>{c.peso} kg</td>
@@ -646,7 +650,7 @@ const PatientProfile: React.FC = () => {
                           <td>
                             {c.proximo_retorno ? (
                               <span className="badge badge-primary" style={{ fontSize: '0.7rem' }}>
-                                {new Date(c.proximo_retorno).toLocaleDateString('pt-BR')}
+                                {formatDate(c.proximo_retorno)}
                               </span>
                             ) : '-'}
                           </td>
@@ -675,7 +679,11 @@ const PatientProfile: React.FC = () => {
                 <Utensils size={22} color="var(--primary-color)" />
                 Histórico de Planos Alimentares
               </h2>
-              <button className="btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1.25rem', fontSize: '0.875rem' }}>
+              <button 
+                className="btn-secondary" 
+                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1.25rem', fontSize: '0.875rem' }}
+                onClick={() => navigate(`/pacientes/${id}/plano/novo`)}
+              >
                 <Apple size={18} color="var(--primary-color)" />
                 Gerar Plano Alimentar
               </button>
@@ -685,7 +693,15 @@ const PatientProfile: React.FC = () => {
               {mealPlans.length > 0 ? (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
                   {mealPlans.map(plan => (
-                    <div key={plan.id} className="stat-card" style={{ cursor: 'pointer', transition: 'all 0.2s' }}>
+                    <div 
+                      key={plan.id} 
+                      className="stat-card" 
+                      style={{ cursor: 'pointer', transition: 'all 0.2s' }}
+                      onClick={() => {
+                        setSelectedPlan(plan);
+                        setIsPlanModalOpen(true);
+                      }}
+                    >
                       <div className="stat-header">
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                           <div className="stat-icon" style={{ width: '2.5rem', height: '2.5rem' }}>
@@ -693,7 +709,7 @@ const PatientProfile: React.FC = () => {
                           </div>
                           <div>
                             <p style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: 600 }}>Plano Alimentar</p>
-                            <p style={{ fontWeight: 700, color: '#111827' }}>{new Date(plan.created_at).toLocaleDateString('pt-BR')}</p>
+                            <p style={{ fontWeight: 700, color: '#111827' }}>{formatDate(plan.created_at)}</p>
                           </div>
                         </div>
                         <ChevronRight size={20} color="#9ca3af" />
@@ -729,6 +745,12 @@ const PatientProfile: React.FC = () => {
           onClose={() => setIsConsultationModalOpen(false)} 
           patientId={id || ''} 
           onSave={fetchProfileData} 
+        />
+
+        <MealPlanModal 
+          isOpen={isPlanModalOpen}
+          onClose={() => setIsPlanModalOpen(false)}
+          plan={selectedPlan}
         />
       </main>
     </div>
